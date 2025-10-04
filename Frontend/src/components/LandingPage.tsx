@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Map, Upload, MessageCircle, BarChart, Shield, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import indiaMap from "@/assets/india-map.jpg";
+import indiaMap from "@/assets/India_from_space.png";
 import dashboardPreview from "@/assets/dashboard-preview.jpg";
 
 const LandingPage = () => {
@@ -50,7 +50,7 @@ const LandingPage = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative fra-section bg-gradient-to-br from-background to-muted overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-[0.5]" >
           <img 
             src={indiaMap} 
             alt="Map of India showing forest rights areas" 
@@ -81,7 +81,7 @@ const LandingPage = () => {
               </div>
             </div>
             
-            <div className="relative hover-lift">
+            {/* <div className="relative hover-lift">
               <div className="fra-card-elevated bg-gradient-card">
                 <img 
                   src={dashboardPreview} 
@@ -94,7 +94,7 @@ const LandingPage = () => {
                   <p className="text-sm opacity-90">Real-time FRA analytics</p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

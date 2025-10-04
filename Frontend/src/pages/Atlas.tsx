@@ -33,16 +33,33 @@ interface Claim {
   id: number;
   patta_holder_name: string;
   father_or_husband_name?: string;
+  age?: string;
+  gender?: string;
+  address?: string;
   village_name: string;
+  block?: string;
   district: string;
   state: string;
   total_area_claimed: string;
   coordinates: string;
-  claim_id: string;
-  status: string;
   land_use?: string;
-  cultivation?: string;
+  claim_id: string;
+  date_of_application?: string;
+  water_bodies?: string;
+  forest_cover?: string;
+  homestead?: string;
+  type?: string;
+  status: string;
+  aadhaar?: string;
   phone?: string;
+  survey_number?: string;
+  land_type?: string;
+  cultivation?: string;
+  family_size?: string;
+  schemes?: string;
+  documents?: string;
+  verification_date?: string;
+  submission_date?: string;
   [key: string]: any;
 }
 
@@ -92,6 +109,7 @@ const Atlas = () => {
   const [claims, setClaims] = useState<Claim[]>([]);
   const [filteredClaims, setFilteredClaims] = useState<Claim[]>([]);
   const [selectedFeature, setSelectedFeature] = useState<any>(null);
+  const [showFullProfile, setShowFullProfile] = useState(false);
 
   // Search states
   const [query, setQuery] = useState("");
@@ -206,6 +224,7 @@ const Atlas = () => {
   const handleViewOnMap = (result: Claim) => {
     setFilteredClaims([result]);
     setSelectedFeature(result);
+    setShowFullProfile(false);
     setSearchResults([]);
     setShowDropdown(false);
     setQuery("");
@@ -225,6 +244,8 @@ const Atlas = () => {
     setStateFilter("");
     setSearchResults([]);
     setFilteredClaims(claims);
+    setSelectedFeature(null);
+    setShowFullProfile(false);
     setShowDropdown(false);
   };
 
@@ -346,16 +367,13 @@ const Atlas = () => {
             <Card className="shadow">
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Info className="h-4 w-4" /> Feature Information
+                  <Info className="h-4 w-4" /> Claim Summary
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-sm space-y-2">
-                <p className="font-medium text-lg">
-                  {selectedFeature.patta_holder_name}
-                </p>
-                <p className="font-mono text-xs text-gray-500">
-                  {selectedFeature.claim_id}
-                </p>
+                {/* Key Fields */}
+                <p className="font-medium text-lg">{selectedFeature.patta_holder_name}</p>
+                <p className="font-mono text-xs text-gray-500">{selectedFeature.claim_id}</p>
                 <div className="grid grid-cols-2 gap-y-1">
                   <span className="text-gray-500">Village</span>
                   <span>{selectedFeature.village_name}</span>
@@ -363,11 +381,49 @@ const Atlas = () => {
                   <span>{selectedFeature.district}</span>
                   <span className="text-gray-500">State</span>
                   <span>{selectedFeature.state}</span>
-                  <span className="text-gray-500">Area</span>
+                  <span className="text-gray-500">Total Area</span>
                   <span>{selectedFeature.total_area_claimed}</span>
+                  <span className="text-gray-500">Status</span>
+                  <span>{getStatusBadge(selectedFeature.status)}</span>
                 </div>
-                <div className="flex justify-between pt-2 border-t">
-                  {getStatusBadge(selectedFeature.status)}
+
+                {/* View Profile Button */}
+                {!showFullProfile && (
+                  <button
+                    onClick={() => setShowFullProfile(true)}
+                    className="mt-2 text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                  >
+                    View Profile
+                  </button>
+                )}
+
+                {/* Full Profile */}
+                {showFullProfile && (
+                  <div className="mt-3 border-t pt-2 grid grid-cols-2 gap-y-1 text-sm">
+                    {Object.entries(selectedFeature).map(([key, value]) => {
+                      if (
+                        ["id", "coordinates", "status", "patta_holder_name", "claim_id", "village_name", "district", "state", "total_area_claimed"].includes(key)
+                      )
+                        return null;
+                      return (
+                        <React.Fragment key={key}>
+                          <span className="text-gray-500">{key.replace(/_/g, " ").toUpperCase()}</span>
+                          <span>{value || "-"}</span>
+                        </React.Fragment>
+                      );
+                    })}
+                    <div className="col-span-2 flex justify-end pt-2 border-t">
+                      <button
+                        onClick={() => setShowFullProfile(false)}
+                        className="text-xs bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
+                      >
+                        Close Profile
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex justify-end pt-2">
                   <button
                     onClick={handleResetMap}
                     className="text-xs bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
@@ -402,7 +458,7 @@ const Atlas = () => {
                 <Marker
                   position={[lat, lng]}
                   icon={createCustomIcon(claim.status)}
-                  eventHandlers={{ click: () => setSelectedFeature(claim) }}
+                  eventHandlers={{ click: () => { setSelectedFeature(claim); setShowFullProfile(false); } }}
                 >
                   <Popup>
                     <div className="w-64 text-sm">
@@ -416,14 +472,11 @@ const Atlas = () => {
                   <Polygon
                     positions={polygon}
                     pathOptions={{
-                      color:
-                        (claim.status || "").toLowerCase() === "verified"
-                          ? "green"
-                          : "blue",
+                      color: (claim.status || "").toLowerCase() === "verified" ? "green" : "blue",
                       weight: 2,
                       fillOpacity: 0.2,
                     }}
-                    eventHandlers={{ click: () => setSelectedFeature(claim) }}
+                    eventHandlers={{ click: () => { setSelectedFeature(claim); setShowFullProfile(false); } }}
                   />
                 )}
               </React.Fragment>

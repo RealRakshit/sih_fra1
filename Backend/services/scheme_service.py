@@ -73,9 +73,9 @@ def find_eligible_people_by_scheme(
     district: str = None,
     state: str = None
 ):
-    q = "SELECT * FROM fra_documents WHERE 1=1"
+    q ="SELECT * FROM fra_documents WHERE 1=1"
     params = []
-
+    print(scheme_record,village,district,state)
     if village:
         q += " AND village_name ILIKE %s"
         params.append(f"%{village}%")

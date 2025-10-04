@@ -38,3 +38,4 @@ earthengine-api            # Google Earth Engine (for ee)
 tensorflow                 # Deep learning models
 numpy                      # Numerical ops
 shapely                    # Geometry operations
+pdf2image

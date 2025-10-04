@@ -25,6 +25,7 @@ def list_schemes():
 @router.get("/check")
 def dss_check(q: str = Query(..., description="Natural language query")):
     parsed = parse_dss_query(q)
+    print(parsed)
 
     scheme_name = parsed.get("scheme")
     village = parsed.get("village")

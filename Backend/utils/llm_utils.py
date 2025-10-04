@@ -224,19 +224,50 @@ about government scheme eligibility.
 
 Rules:
 1. Extract scheme, village, district, state (if available).
-2. If any field is missing, return null.
-3. Output ONLY valid JSON. No explanation, no markdown.
+2. A "village" must be a small settlement name, not a state name.
+3. A "state" must be a recognized Indian state.
+4. If any field is missing, return null.
+5. Output ONLY valid JSON. No explanation, no markdown.
 
-Example:
-Question: Who is eligible for Farm Support Scheme in Bhimganga?
+# Examples with state only
+Question: Who is eligible for Old Age Pension in Chhattisgarh?
+Answer:
+{
+  "scheme": "Old Age Pension",
+  "village": null,
+  "district": null,
+  "state": "Chhattisgarh"
+}
+
+Question: Who can apply for Farm Support Scheme in Odisha?
 Answer:
 {
   "scheme": "Farm Support Scheme",
-  "village": "Bhimganga",
+  "village": null,
   "district": null,
-  "state": null
+  "state": "Odisha"
 }
 
+# Examples with village + state
+Question: Who can apply for Women Self-Help Scheme in Satna, Madhya Pradesh?
+Answer:
+{
+  "scheme": "Women Self-Help Scheme",
+  "village": "Satna",
+  "district": null,
+  "state": "Madhya Pradesh"
+}
+
+Question: Who is eligible for Forest Rehabilitation Program in Jagdalpur, Chhattisgarh?
+Answer:
+{
+  "scheme": "Forest Rehabilitation Program",
+  "village": "Jagdalpur",
+  "district": null,
+  "state": "Chhattisgarh"
+}
+
+# Examples with only village
 Question: List all people in Mandla eligible for Old Age Pension.
 Answer:
 {
@@ -245,7 +276,17 @@ Answer:
   "district": null,
   "state": null
 }
+
+Question: Who is eligible for Farm Support Scheme in Bhimganga?
+Answer:
+{
+  "scheme": "Farm Support Scheme",
+  "village": "Bhimganga",
+  "district": null,
+  "state": null
+}
 """
+
 
 
 dss_prompt = PromptTemplate.from_template(DSS_PROMPT)
